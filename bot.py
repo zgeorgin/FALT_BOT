@@ -1,13 +1,26 @@
 import logging
-from aiogram import Bot, Dispatcher, executor
-from handlers import main_handlers, user_handlers, admin_handlers
+from aiogram import Bot, Dispatcher
+import asyncio
+from handlers.main_menu_handler import main_router
+from handlers.registration_handler import reg_router
 from database.db import init_db
 import os
+from dotenv import load_dotenv
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
 
 logging.basicConfig(level=logging.INFO)
 
-TOKEN = os.environ.get("TOKEN")
+TOKEN = os.getenv("TOKEN")
 
 bot = Bot(token=TOKEN)
-init_db()
-
+dp = Dispatcher()
+async def main():
+    init_db()
+    dp.include_router(main_router)
+    dp.include_router(reg_router)
+    await dp.start_polling(bot)
+    
+if __name__ == "__main__":
+    asyncio.run(main())

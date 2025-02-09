@@ -1,0 +1,202 @@
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.event:Update id=635736083 is handled. Duration 510 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736084 is not handled. Duration 0 ms by bot id=7523870226
+WARNING:aiogram.dispatcher:Received SIGINT signal
+INFO:aiogram.dispatcher:Polling stopped for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.event:Update id=635736085 is handled. Duration 918 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736086 is handled. Duration 304 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736087 is not handled. Duration 0 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736088 is not handled. Duration 0 ms by bot id=7523870226
+WARNING:aiogram.dispatcher:Received SIGINT signal
+INFO:aiogram.dispatcher:Polling stopped for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.event:Update id=635736089 is handled. Duration 504 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736090 is handled. Duration 305 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736091 is handled. Duration 616 ms by bot id=7523870226
+WARNING:aiogram.dispatcher:Received SIGINT signal
+INFO:aiogram.dispatcher:Polling stopped for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.event:Update id=635736092 is handled. Duration 922 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736093 is handled. Duration 205 ms by bot id=7523870226
+WARNING:aiogram.dispatcher:Received SIGINT signal
+INFO:aiogram.dispatcher:Polling stopped for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.event:Update id=635736094 is handled. Duration 771 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736095 is handled. Duration 613 ms by bot id=7523870226
+WARNING:aiogram.dispatcher:Received SIGINT signal
+INFO:aiogram.dispatcher:Polling stopped for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.event:Update id=635736096 is handled. Duration 863 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736097 is handled. Duration 625 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736098 is handled. Duration 613 ms by bot id=7523870226
+WARNING:aiogram.dispatcher:Received SIGINT signal
+INFO:aiogram.dispatcher:Polling stopped for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.event:Update id=635736099 is handled. Duration 613 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736100 is handled. Duration 316 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736101 is not handled. Duration 308 ms by bot id=7523870226
+ERROR:aiogram.event:Cause exception while process update id=635736101 by bot id=7523870226
+TypeError: 'NoneType' object is not subscriptable
+Traceback (most recent call last):
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/handlers/registration_handler.py", line 23, in ask_name
+    photo = message.photo[-1]
+            ~~~~~~~~~~~~~^^^^
+TypeError: 'NoneType' object is not subscriptable
+INFO:aiogram.event:Update id=635736102 is handled. Duration 0 ms by bot id=7523870226
+WARNING:aiogram.dispatcher:Received SIGINT signal
+INFO:aiogram.dispatcher:Polling stopped for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.event:Update id=635736103 is handled. Duration 611 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736104 is handled. Duration 316 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736105 is handled. Duration 111 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736106 is handled. Duration 204 ms by bot id=7523870226
+INFO:aiogram.event:Update id=635736107 is not handled. Duration 0 ms by bot id=7523870226
+ERROR:aiogram.event:Cause exception while process update id=635736107 by bot id=7523870226
+ValidationError: 2 validation errors for SendPhoto
+photo.is-instance[InputFile]
+  Input should be an instance of InputFile [type=is_instance_of, input_value=PhotoSize(file_id='AgACAg...t=1168, file_size=65594), input_type=PhotoSize]
+    For further information visit https://errors.pydantic.dev/2.10/v/is_instance_of
+photo.str
+  Input should be a valid string [type=string_type, input_value=PhotoSize(file_id='AgACAg...t=1168, file_size=65594), input_type=PhotoSize]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+Traceback (most recent call last):
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/handlers/registration_handler.py", line 41, in finalize
+    await summarize_info(message, data)
+  File "/home/george/Documents/GitHub/FALT_BOT/handlers/registration_handler.py", line 44, in summarize_info
+    await message.answer_photo(data["photo"])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/aiogram/types/message.py", line 2246, in answer_photo
+    return SendPhoto(
+           ^^^^^^^^^^
+  File "/home/george/Documents/GitHub/FALT_BOT/.venv/lib/python3.12/site-packages/pydantic/main.py", line 214, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 2 validation errors for SendPhoto
+photo.is-instance[InputFile]
+  Input should be an instance of InputFile [type=is_instance_of, input_value=PhotoSize(file_id='AgACAg...t=1168, file_size=65594), input_type=PhotoSize]
+    For further information visit https://errors.pydantic.dev/2.10/v/is_instance_of
+photo.str
+  Input should be a valid string [type=string_type, input_value=PhotoSize(file_id='AgACAg...t=1168, file_size=65594), input_type=PhotoSize]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+WARNING:aiogram.dispatcher:Received SIGINT signal
+INFO:aiogram.dispatcher:Polling stopped for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+WARNING:aiogram.dispatcher:Received SIGINT signal
+INFO:aiogram.dispatcher:Polling stopped for bot @test556456456_bot id=7523870226 - 'test NutriBot'
+INFO:aiogram.dispatcher:Polling stopped
