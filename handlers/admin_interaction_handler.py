@@ -18,7 +18,7 @@ async def accepting_registration(call : CallbackQuery):
     await call.bot.send_message(user_id, "Вы были успешно зарегистрированы!", reply_markup=get_start_kb())
     
 @admin_router.callback_query(F.data.contains("admin_decline"))
-async def accepting_registration(call : CallbackQuery):
+async def declining_registration(call : CallbackQuery):
     data = call.data.split()
     user_id, name, surname = data[:-1]
     await call.bot.send_message(user_id, "Ваша заявка на регистрацию отклонена!", reply_markup=get_start_kb())
