@@ -2,8 +2,9 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL UNIQUE,
     name TEXT,
-    status TEXT DEFAULT "pending",
-    wallet REAL DEFAULT 0
+    surname TEXT,
+    wallet REAL DEFAULT 0,
+    label TEXT
 );
 
 CREATE TABLE IF NOT EXISTS laundry (

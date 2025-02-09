@@ -6,6 +6,7 @@ main_router = Router()
 
 @main_router.message(CommandStart())
 async def start_message(message : Message):
+    print(message.chat.id)
     await message.answer('Добро пожаловать в Сервисы ФАЛТ 2.0!', reply_markup=get_main_menu_kb(message.from_user.id))
 
 @main_router.callback_query(F.data == "cancel")

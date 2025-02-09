@@ -3,6 +3,14 @@ import os
 
 DATABASE_PATH = os.environ.get("DB_PATH")
 
+class User():
+    def __init__(self, user_id, name, surname, wallet = 0, label = 0):
+        self.name = name
+        self.surname = surname
+        self.user_id = user_id
+        self.wallet = wallet
+        self.label = label
+
 def get_connection():
     return sqlite3.connect(DATABASE_PATH)
 
@@ -13,18 +21,18 @@ def init_db():
     conn.commit()
     conn.close()
 
-def add_user(user_id, name):
+def add_user(user : User):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO users (user_id, name, status, wallet) VALUES (?, ?, ?, ?)",
-                   (user_id, name, "pending", 0))
+    cursor.execute("INSERT INTO users (user_id, name, surname wallet, label) VALUES (?, ?, ?, ?, ?)",
+                   (user.user_id, user.name, user.surname, user.wallet, user.label, ))
     conn.commit()
     conn.close()
 
-def is_registered(user_id):
+def is_registered(user_id) -> User | None:
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT 1 FROM users WHERE user_id == ? LIMIT 1", (user_id, ))
-    all_matches = cursor.fetchone()
+    user = cursor.fetchone()
     conn.close()
-    return all_matches is not None
+    return None if user is None else User(*(user[1:]))
