@@ -17,15 +17,18 @@ def get_main_menu_kb(user_id) -> InlineKeyboardMarkup:
     
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
+def get_start_kb() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Перейти в главное меню", callback_data="start_from_button")]])
+
 def get_cancel_kb() -> InlineKeyboardMarkup:
     inline_kb_list = [[InlineKeyboardButton(text="Отмена", callback_data="cancel")]]
     
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
-def get_admin_kb(user_id) -> InlineKeyboardMarkup:
+def get_admin_kb(user_id, name, surname) -> InlineKeyboardMarkup:
     inline_kb_list = [
-        [InlineKeyboardButton(text="Подтвердить", callback_data=f"{user_id} admin_accept")],
-        [InlineKeyboardButton(text="Отклонить", callback_data=f"{user_id} admin_decline")]
+        [InlineKeyboardButton(text="Подтвердить", callback_data=f"{user_id} {name} {surname} admin_accept")],
+        [InlineKeyboardButton(text="Отклонить", callback_data=f"{user_id} {name} {surname} admin_decline")]
     ]
     
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)

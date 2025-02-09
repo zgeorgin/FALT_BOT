@@ -24,7 +24,7 @@ def init_db():
 def add_user(user : User):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO users (user_id, name, surname wallet, label) VALUES (?, ?, ?, ?, ?)",
+    cursor.execute("INSERT INTO users (user_id, name, surname, wallet, label) VALUES (?, ?, ?, ?, ?)",
                    (user.user_id, user.name, user.surname, user.wallet, user.label, ))
     conn.commit()
     conn.close()
@@ -32,7 +32,10 @@ def add_user(user : User):
 def is_registered(user_id) -> User | None:
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT 1 FROM users WHERE user_id == ? LIMIT 1", (user_id, ))
+    cursor.execute("SELECT * FROM users WHERE user_id == ? LIMIT 1", (user_id, ))
     user = cursor.fetchone()
+    print(user)
     conn.close()
-    return None if user is None else User(*(user[1:]))
+    if user is not None:
+        return User(user_id = user[1], name = user[2], surname = user[3], wallet=user[4], label=user[5])
+    return None

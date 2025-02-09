@@ -3,6 +3,7 @@ from aiogram import Bot, Dispatcher
 import asyncio
 from handlers.main_menu_handler import main_router
 from handlers.registration_handler import reg_router
+from handlers.admin_interaction_handler import admin_router
 from database.db import init_db
 import os
 from dotenv import load_dotenv
@@ -20,6 +21,7 @@ async def main():
     init_db()
     dp.include_router(main_router)
     dp.include_router(reg_router)
+    dp.include_router(admin_router)
     await dp.start_polling(bot)
     
 if __name__ == "__main__":

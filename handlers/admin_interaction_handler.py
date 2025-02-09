@@ -1,0 +1,25 @@
+from aiogram import Router, F
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import CallbackQuery, Message, FSInputFile
+from aiogram.enums.content_type import ContentType
+from keyboards.keyboards import get_start_kb
+from database.db import User, add_user
+import os
+
+admin_router = Router()
+
+@admin_router.callback_query(F.data.contains("admin_accept"))
+async def accepting_registration(call : CallbackQuery):
+    data = call.data.split()
+    user_id, name, surname = data[:-1]
+    user = User(user_id, name, surname)
+    add_user(user)
+    await call.bot.send_message(user_id, "Вы были успешно зарегистрированы!", reply_markup=get_start_kb())
+    
+@admin_router.callback_query(F.data.contains("admin_decline"))
+async def accepting_registration(call : CallbackQuery):
+    data = call.data.split()
+    user_id, name, surname = data[:-1]
+    await call.bot.send_message(user_id, "Ваша заявка на регистрацию отклонена!", reply_markup=get_start_kb())
+    

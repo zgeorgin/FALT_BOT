@@ -55,4 +55,4 @@ async def send_info(message : Message, state : FSMContext):
     await send_to_admin(message, data)
     
 async def send_to_admin(message : Message, data : dict):
-    await message.bot.send_photo(ADMIN_CHAT_ID, FSInputFile(data["photo"]), caption=f'Пользователь: {data["name"]} {data["surname"]}', reply_markup=get_admin_kb(message.from_user.id))
+    await message.bot.send_photo(ADMIN_CHAT_ID, FSInputFile(data["photo"]), caption=f'Пользователь: {data["name"]} {data["surname"]}', reply_markup=get_admin_kb(message.from_user.id, data["name"], data["surname"]))
