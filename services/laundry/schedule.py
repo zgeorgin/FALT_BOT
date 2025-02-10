@@ -18,13 +18,14 @@ class Schedule():
             json.dump(self.schedule, file, indent=4)
             
     def is_time_available(self, date, machine_id, start_time, end_time):
-        if date not in self.schedule or machine_id not in self.schedule[date]:
+        if date not in self.schedule.keys() or machine_id not in self.schedule[date].keys():
             return True  # Если нет записей на эту дату/машину, она свободна
 
         for booking in self.schedule[date][machine_id]:
             # Проверяем на пересечение интервалов (занятые слоты)
             booked_start, booked_end, _ = booking
-            if not (end_time <= booked_start or start_time >= booked_end):
+            print(booked_start, booked_end)
+            if datetime.strptime(booked_start, "%H:%M") < datetime.strptime(end_time, "%H:%M") <= datetime.strptime(booked_end, "%H:%M") or datetime.strptime(booked_start, "%H:%M") <= datetime.strptime(start_time, "%H:%M") < datetime.strptime(booked_end, "%H:%M"):
                 return False  # Время занято
 
         return True
