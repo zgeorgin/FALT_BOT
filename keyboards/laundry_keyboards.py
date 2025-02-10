@@ -4,17 +4,21 @@ from database.db import is_registered
 from datetime import datetime, timedelta
 from services.laundry.schedule import Schedule
 
+CANCEL_BUTTON = InlineKeyboardButton(text="Вернуться в главное меню", callback_data="cancel")
+EXIT_BUTTON = InlineKeyboardButton(text="Назад", callback_data="exit_from_record")
+
 def record_set_day_kb(date) -> InlineKeyboardMarkup:
     inline_kb_list = []
     for i in range(6):
         inline_kb_list.append([InlineKeyboardButton(text = (date + timedelta(days=i)).strftime("%d.%m.%Y"), callback_data=f"record_date {(date + timedelta(days=i)).strftime("%d.%m.%Y")}")])
+    inline_kb_list.append([CANCEL_BUTTON])
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
 def record_set_machine_kb() -> InlineKeyboardMarkup:
     inline_kb_list = []
     for i in range(1, 7):
         inline_kb_list.append([InlineKeyboardButton(text = f"#{i}" if i < 6 else f"#6(Сушилка)", callback_data=f"Машинка {i}")])
-    
+    inline_kb_list.append([EXIT_BUTTON])
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
 def record_set_time_kb(schedule : Schedule, date, machine_id) -> InlineKeyboardMarkup:
@@ -24,6 +28,8 @@ def record_set_time_kb(schedule : Schedule, date, machine_id) -> InlineKeyboardM
     for i in range(12):
         begin_time = (clear_date + timedelta(hours = 2 * i)).strftime("%H:%M")
         end_time = (clear_date + timedelta(hours = 2 * (i + 1))).strftime("%H:%M")
+        if end_time == "00:00":
+            end_time = "23:59"
         if schedule.is_time_available(date, str(machine_id), begin_time, end_time):
             raw_list.append(InlineKeyboardButton(text=f"{begin_time}-{end_time}",callback_data=f"set_time {begin_time} {end_time}"))
         else:
@@ -34,5 +40,14 @@ def record_set_time_kb(schedule : Schedule, date, machine_id) -> InlineKeyboardM
         inline_kb_list.append([])
         for j in range(4):
             inline_kb_list[-1].append(raw_list[i * 4 + j])
-    inline_kb_list.append([InlineKeyboardButton(text="Ввести время вручную", callback_data="manual_time"), InlineKeyboardButton(text="Назад",callback_data="exit_from_record")])
+    inline_kb_list.append([InlineKeyboardButton(text="Ввести время вручную", callback_data="manual_time"), EXIT_BUTTON])
+    return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
+
+def cart_kb(date) -> InlineKeyboardMarkup:
+    inline_kb_list = [
+        [InlineKeyboardButton(text = "Добавить бронь", callback_data=f"record_date {date}")],
+        [InlineKeyboardButton(text = "Оплатить", callback_data=f"laundry_pay")],
+        [CANCEL_BUTTON]
+    ]
+    
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)

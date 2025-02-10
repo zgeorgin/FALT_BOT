@@ -24,7 +24,6 @@ class Schedule():
         for booking in self.schedule[date][machine_id]:
             # Проверяем на пересечение интервалов (занятые слоты)
             booked_start, booked_end, _ = booking
-            print(booked_start, booked_end)
             if datetime.strptime(booked_start, "%H:%M") < datetime.strptime(end_time, "%H:%M") <= datetime.strptime(booked_end, "%H:%M") or datetime.strptime(booked_start, "%H:%M") <= datetime.strptime(start_time, "%H:%M") < datetime.strptime(booked_end, "%H:%M"):
                 return False  # Время занято
 

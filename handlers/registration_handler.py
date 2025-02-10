@@ -4,6 +4,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message, FSInputFile
 from aiogram.enums.content_type import ContentType
 from keyboards.keyboards import get_cancel_kb, get_admin_kb
+import random, string
 import os
 reg_router = Router()
 
@@ -28,12 +29,12 @@ async def ask_name(message : Message, state : FSMContext):
 
     file_info = await message.bot.get_file(file_id)
     downloaded_file = await message.bot.download_file(file_info.file_path)
-    file_path = "tmp_files/photo.jpg"
+    filepath = 'tmp_files/' + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)) + ".png"
     
-    with open(file_path, "wb") as file:
+    with open(filepath, "wb") as file:
         file.write(downloaded_file.read())
         
-    await state.update_data(photo=file_path)
+    await state.update_data(photo=filepath)
     await state.set_state(Registration.name)
     await message.answer("Введите имя: ")
     
