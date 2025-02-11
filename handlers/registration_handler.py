@@ -16,7 +16,7 @@ class Registration(StatesGroup):
 
 @reg_router.callback_query(F.data == "registration")
 async def start_registration(call : CallbackQuery, state : FSMContext):
-    await call.message.edit_text("Отправьте фотографию из своего личного кабинета МФТИ, на которой видно вашу фотографию, имя и фамилию", reply_markup=get_cancel_kb())
+    await call.message.edit_caption(caption="Отправьте фотографию из своего личного кабинета МФТИ, на которой видно вашу фотографию, имя и фамилию", reply_markup=get_cancel_kb())
     await state.set_state(Registration.photo)
     
 @reg_router.message(Registration.photo)
