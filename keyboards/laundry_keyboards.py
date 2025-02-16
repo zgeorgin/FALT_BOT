@@ -10,14 +10,17 @@ EXIT_BUTTON = InlineKeyboardButton(text="Назад", callback_data="exit_from_r
 def record_set_day_kb(date) -> InlineKeyboardMarkup:
     inline_kb_list = []
     for i in range(6):
-        inline_kb_list.append([InlineKeyboardButton(text = (date + timedelta(days=i)).strftime("%d.%m.%Y"), callback_data=f"record_date {(date + timedelta(days=i)).strftime("%d.%m.%Y")}")])
+        inline_kb_list.append([InlineKeyboardButton(text = (date + timedelta(days=i)).strftime('%d.%m.%Y'), callback_data=f"record_date {(date + timedelta(days=i)).strftime('%d.%m.%Y')}")])
     inline_kb_list.append([CANCEL_BUTTON])
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
 def record_set_machine_kb() -> InlineKeyboardMarkup:
     inline_kb_list = []
     for i in range(1, 7):
-        inline_kb_list.append([InlineKeyboardButton(text = f"#{i}" if i < 6 else f"#6(Сушилка)", callback_data=f"Машинка {i}")])
+        if i in [4, 5]:
+            inline_kb_list.append([InlineKeyboardButton(text = "На тех.обслуживании (Запись не доступна)", callback_data=f"broken")])
+        else:
+            inline_kb_list.append([InlineKeyboardButton(text = f"#{i}" if i < 6 else f"#6(Сушилка)", callback_data=f"Машинка {i}")])
     inline_kb_list.append([EXIT_BUTTON])
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 

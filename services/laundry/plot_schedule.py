@@ -83,3 +83,4 @@ def plot_schedule(schedule, date, filepath):
 
     plt.tight_layout()
     plt.savefig(filepath)
+    plt.close()

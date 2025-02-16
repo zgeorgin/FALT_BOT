@@ -1,7 +1,5 @@
 import sqlite3
-import os
-
-DATABASE_PATH = os.environ.get("DB_PATH")
+from config import DB_PATH as DATABASE_PATH
 
 class User():
     def __init__(self, user_id, name, surname, wallet = 0, label = 0):
