@@ -4,6 +4,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message, FSInputFile
 from aiogram.enums.content_type import ContentType
 from aiogram.types import Message, CallbackQuery, InputMediaPhoto
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import InlineKeyboardButton
 from keyboards.laundry_keyboards import record_set_day_kb, record_set_machine_kb, record_set_time_kb, cart_kb
 from keyboards.keyboards import get_cancel_kb, get_start_kb
 from services.laundry.schedule import Schedule
@@ -14,6 +16,9 @@ import random
 import string
 import os
 from config import LAUNDRY_DATA_PATH as SCHEDULE_PATH
+import tempfile
+
+
 laundry_router = Router()
 
 SCHEDULE_PATH = os.getenv("LAUNDRY_DATA_PATH")
@@ -35,32 +40,34 @@ async def start_record(call : CallbackQuery, state : FSMContext):
 
     
 @laundry_router.callback_query(F.data.contains("record_date"))
-async def set_day(call : CallbackQuery, state : FSMContext):
+async def set_day(call: CallbackQuery, state: FSMContext):
     date = call.data.split()[1]
     schedule = Schedule(SCHEDULE_PATH)
     schedule.load_schedule()
-    filepath = 'tmp_files/' + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)) + ".png"
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+    filepath = tmp.name
+    tmp.close()
     plot_schedule(schedule=schedule.schedule, date=date, filepath=filepath)
     await call.message.edit_media(InputMediaPhoto(media=FSInputFile(filepath), caption="Выберите машинку: "), reply_markup=record_set_machine_kb())
-    await state.update_data(date = date)
+    await state.update_data(date=date)
     await state.update_data(filepath=filepath)
-    await state.update_data(original_message = call.message)
+    await state.update_data(original_message=call.message)
     await state.set_state(RecordInfo.machine)
 
 @laundry_router.callback_query(F.data.contains("Машинка"))
-async def set_machine(call : CallbackQuery, state : FSMContext):
+async def set_machine(call: CallbackQuery, state: FSMContext):
     machine = call.data.split()[1]
     if machine in ["4", "1"]:
         return
     data = await state.update_data(machine=machine)
-    try: 
+    try:
         os.remove(data["filepath"])
     except Exception:
         pass
     schedule = Schedule(SCHEDULE_PATH)
     schedule.load_schedule()
     await call.message.edit_caption(caption=f"Выберите время:", reply_markup=record_set_time_kb(schedule, data["date"], data["machine"]))
-    
+
 @laundry_router.callback_query(F.data.contains("set_time"))
 async def set_time(call : CallbackQuery, state : FSMContext):
     _, begin_time, end_time = call.data.split()
@@ -77,6 +84,47 @@ async def set_time(call : CallbackQuery, state : FSMContext):
 async def receive_manual_time(call : CallbackQuery, state : FSMContext):
     await state.set_state(RecordInfo.manual_time)
     await call.message.edit_caption(caption="Введите ваше время в формате чч:мм-чч:мм (например, 09:00-10:00)", reply_markup=get_cancel_kb())
+
+@laundry_router.callback_query(F.data == "laundry_my")
+async def laundry_my(call: CallbackQuery, state: FSMContext):
+    schedule = Schedule(SCHEDULE_PATH)
+    schedule.load_schedule()
+    bookings = schedule.get_user_bookings(str(call.message.chat.id))
+    if not bookings:
+        await call.message.edit_caption(caption="У вас нет записей.", reply_markup=get_start_kb())
+        return
+    text_lines = ["Ваши записи:"]
+    kb = InlineKeyboardBuilder()
+    for i, (date, machine, b, e, label) in enumerate(bookings, 1):
+        text_lines.append(f"{i}. {date} • Машинка {machine} • {b}-{e}")
+        kb.add(InlineKeyboardButton(text=f"Отменить {i}", callback_data=f"laundry_cancel {date} {machine} {b} {e}"))
+    kb.add(InlineKeyboardButton(text="Назад", callback_data="start_from_button"))
+    kb.adjust(1)
+    await call.message.edit_caption(caption="\n".join(text_lines), reply_markup=kb.as_markup())
+
+
+@laundry_router.callback_query(F.data.contains("laundry_cancel"))
+async def laundry_cancel(call: CallbackQuery):
+    _, date, machine, b, e = call.data.split()
+    schedule = Schedule(SCHEDULE_PATH)
+    schedule.load_schedule()
+    ok = schedule.remove_booking(date, machine, b, e, str(call.message.chat.id))
+    if not ok:
+        await call.message.edit_caption(caption="Не удалось отменить запись (возможно, она уже удалена).", reply_markup=get_start_kb())
+        return
+    bookings = schedule.get_user_bookings(str(call.message.chat.id))
+    if not bookings:
+        await call.message.edit_caption(caption="Запись отменена. У вас больше нет записей.", reply_markup=get_start_kb())
+        return
+    text_lines = ["Запись отменена. Ваши актуальные записи:"]
+    kb = InlineKeyboardBuilder()
+    for i, (d, m, bb, ee, label) in enumerate(bookings, 1):
+        text_lines.append(f"{i}. {d} • Машинка {m} • {bb}-{ee}")
+        kb.add(InlineKeyboardButton(text=f"Отменить {i}", callback_data=f"laundry_cancel {d} {m} {bb} {ee}"))
+    kb.add(InlineKeyboardButton(text="Назад", callback_data="start_from_button"))
+    kb.adjust(1)
+    await call.message.edit_caption(caption="\n".join(text_lines), reply_markup=kb.as_markup())
+
 
 @laundry_router.message(RecordInfo.manual_time)
 async def send_manual_time(message : Message, state : FSMContext):
@@ -112,8 +160,7 @@ async def laundry_pay(call : CallbackQuery, state : FSMContext):
     user = is_registered(call.message.chat.id)
     schedule = Schedule(SCHEDULE_PATH)
     schedule.load_schedule()
-    print(data["all_laundries"])
     for record in data["all_laundries"]:
-        schedule.add_booking(data["date"], record[0], record[1], record[2], f"{user.surname} {user.name[0]}.")
+        schedule.add_booking(data["date"], record[0], record[1], record[2], f"{user.surname} {user.name[0]}.", str(call.message.chat.id))
     await call.message.edit_media(InputMediaPhoto(media=FSInputFile("falt.jpg"), caption="Оплата проведена успешно!"), reply_markup=get_start_kb())
     
