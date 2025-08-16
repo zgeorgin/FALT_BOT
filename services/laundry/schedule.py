@@ -38,6 +38,5 @@ class Schedule():
         if machine_id not in self.schedule[date]:
             self.schedule[date][machine_id] = []
 
-        # Добавляем новую запись
         self.schedule[date][machine_id].append([start_time, end_time, label])
-        self.save_schedule()  # Сохраняем изменения
+        self.save_schedule()

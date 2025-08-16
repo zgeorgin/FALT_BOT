@@ -17,7 +17,7 @@ def record_set_day_kb(date) -> InlineKeyboardMarkup:
 def record_set_machine_kb() -> InlineKeyboardMarkup:
     inline_kb_list = []
     for i in range(1, 7):
-        if i in [4, 5]:
+        if i in [4, 1]:
             inline_kb_list.append([InlineKeyboardButton(text = "На тех.обслуживании (Запись не доступна)", callback_data=f"broken")])
         else:
             inline_kb_list.append([InlineKeyboardButton(text = f"#{i}" if i < 6 else f"#6(Сушилка)", callback_data=f"Машинка {i}")])

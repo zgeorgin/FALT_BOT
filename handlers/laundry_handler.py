@@ -50,7 +50,7 @@ async def set_day(call : CallbackQuery, state : FSMContext):
 @laundry_router.callback_query(F.data.contains("Машинка"))
 async def set_machine(call : CallbackQuery, state : FSMContext):
     machine = call.data.split()[1]
-    if machine in ["4", "5"]:
+    if machine in ["4", "1"]:
         return
     data = await state.update_data(machine=machine)
     try: 
