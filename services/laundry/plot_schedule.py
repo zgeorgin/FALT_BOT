@@ -24,7 +24,6 @@ def plot_schedule(schedule, date, filepath):
         x_left = i
         x_right = i + 1
         ax.vlines(x=[x_left, x_right], ymin=0, ymax=24, colors="black", linewidth=0.5)
-=
         label = f"#{machine_id}"
         ax.text((x_left + x_right) / 2, 24.5, label, ha="center", va="center", fontsize=12)
 

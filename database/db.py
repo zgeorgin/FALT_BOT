@@ -32,7 +32,6 @@ def is_registered(user_id) -> User | None:
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM users WHERE user_id == ? LIMIT 1", (user_id, ))
     user = cursor.fetchone()
-    print(user)
     conn.close()
     if user is not None:
         return User(user_id = user[1], name = user[2], surname = user[3], wallet=user[4], label=user[5])
