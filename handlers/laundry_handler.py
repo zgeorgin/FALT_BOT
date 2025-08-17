@@ -160,7 +160,9 @@ async def laundry_pay(call : CallbackQuery, state : FSMContext):
     user = is_registered(call.message.chat.id)
     schedule = Schedule(SCHEDULE_PATH)
     schedule.load_schedule()
+    print(data["all_laundries"])
     for record in data["all_laundries"]:
         schedule.add_booking(data["date"], record[0], record[1], record[2], f"{user.surname} {user.name[0]}.", str(call.message.chat.id))
     await call.message.edit_media(InputMediaPhoto(media=FSInputFile("falt.jpg"), caption="Оплата проведена успешно!"), reply_markup=get_start_kb())
+
     

@@ -8,6 +8,7 @@ from handlers.laundry_handler import laundry_router
 from aiogram.methods import set_my_commands
 from aiogram.types import BotCommand, BotCommandScopeDefault
 from database.db import init_db
+
 from config import TOKEN
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
