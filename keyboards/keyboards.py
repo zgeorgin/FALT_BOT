@@ -12,7 +12,8 @@ def get_main_menu_kb(user_id) -> InlineKeyboardMarkup:
     inline_kb_list = [
         [InlineKeyboardButton(text="Записаться на стирку", callback_data='laundry_record')],
         [InlineKeyboardButton(text="Забронировать боталку", callback_data='studyroom_record')],
-        [InlineKeyboardButton(text="Тех. поддержка", callback_data='support')]        
+        [InlineKeyboardButton(text="Тех. поддержка", callback_data='support')],     
+        [InlineKeyboardButton(text="Мои записи", callback_data="laundry_my")]   
     ]
     
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)

@@ -4,11 +4,12 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message, FSInputFile
 from aiogram.enums.content_type import ContentType
 from keyboards.keyboards import get_cancel_kb, get_admin_kb
-import random, string
-import os
+import tempfile, os
+from config import ADMIN_CHAT_ID
+
+
 reg_router = Router()
 
-ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
 class Registration(StatesGroup):
     photo = State()
     name = State()
@@ -20,24 +21,21 @@ async def start_registration(call : CallbackQuery, state : FSMContext):
     await state.set_state(Registration.photo)
     
 @reg_router.message(Registration.photo)
-async def ask_name(message : Message, state : FSMContext):
+async def ask_name(message: Message, state: FSMContext):
     if message.content_type != ContentType.PHOTO:
         await message.answer("Неверный формат данных! Отправьте фото!", reply_markup=get_cancel_kb())
         return
     photo = message.photo[-1]
     file_id = photo.file_id
-
     file_info = await message.bot.get_file(file_id)
     downloaded_file = await message.bot.download_file(file_info.file_path)
-    filepath = 'tmp_files/' + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)) + ".png"
-    
-    with open(filepath, "wb") as file:
-        file.write(downloaded_file.read())
-        
-    await state.update_data(photo=filepath)
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+    tmp.write(downloaded_file.read())
+    tmp.close()
+    await state.update_data(photo=tmp.name)
     await state.set_state(Registration.name)
     await message.answer("Введите имя: ")
-    
+
 @reg_router.message(Registration.name)
 async def ask_surname(message : Message, state : FSMContext):
     if message.content_type != ContentType.TEXT:
@@ -55,5 +53,15 @@ async def send_info(message : Message, state : FSMContext):
     data = await state.update_data(surname=message.text)
     await send_to_admin(message, data)
     
-async def send_to_admin(message : Message, data : dict):
-    await message.bot.send_photo(ADMIN_CHAT_ID, FSInputFile(data["photo"]), caption=f'Пользователь: {data["name"]} {data["surname"]}', reply_markup=get_admin_kb(message.chat.id, data["name"], data["surname"]))
+async def send_to_admin(message: Message, data: dict):
+    path = data["photo"]
+    await message.bot.send_photo(
+        ADMIN_CHAT_ID,
+        FSInputFile(path),
+        caption=f'Пользователь: {data["name"]} {data["surname"]}',
+        reply_markup=get_admin_kb(message.chat.id, data["name"], data["surname"])
+    )
+    try:
+        os.remove(path)
+    except:
+        pass
