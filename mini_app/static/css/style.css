@@ -1,0 +1,199 @@
+/* ===== Стили для таблицы расписания ===== */
+
+.schedule-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -16px;
+    padding: 0 16px;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: var(--tg-secondary-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    color: var(--tg-text);
+}
+
+.schedule-table th,
+.schedule-table td {
+    padding: 8px 4px;
+    text-align: center;
+    border: 1px solid var(--tg-hint);
+    min-width: 60px;
+    color: var(--tg-text);
+}
+
+.schedule-table thead th {
+    background: var(--tg-button);
+    color: var(--tg-button-text);
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.time-header {
+    min-width: 50px !important;
+    background: var(--tg-secondary-bg) !important;
+    color: var(--tg-text) !important;
+}
+
+.time-cell {
+    font-weight: 600;
+    font-size: 11px;
+    background: var(--tg-bg);
+    color: var(--tg-text);
+}
+
+/* Ячейки слотов - светлая тема */
+.slot-cell {
+    height: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.slot-cell.available {
+    background: #c8e6c9;
+    color: #1b5e20;
+}
+
+.slot-cell.available:hover {
+    background: #a5d6a7;
+    transform: scale(1.05);
+}
+
+.slot-cell.booked {
+    background: #ffcdd2;
+    color: #b71c1c;
+    cursor: not-allowed;
+}
+
+.slot-cell.in-cart {
+    background: var(--tg-button);
+    color: var(--tg-button-text);
+}
+
+/* Тёмная тема */
+@media (prefers-color-scheme: dark) {
+    .slot-cell.available {
+        background: #07760d;
+        color: #ffffff00;
+    }
+
+    .slot-cell.available:hover {
+        background: #1b5e20;
+        transform: scale(1.05);
+    }
+
+    .slot-cell.booked {
+        background: #de0c0c;
+        color: #ffffff09;
+        cursor: not-allowed;
+    }
+
+    .slot-cell.in-cart {
+        background: var(--tg-button);
+        color: var(--tg-button-text);
+    }
+}
+
+/* Бейджи */
+.available-badge {
+    width: 24px;
+    height: 24px;
+    background: var(--success);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin: 0 auto;
+}
+
+.cart-badge {
+    width: 24px;
+    height: 24px;
+    background: var(--tg-button);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin: 0 auto;
+}
+
+.booking-info {
+    font-size: 10px;
+    color: var(--danger);
+    font-weight: 600;
+}
+
+/* Легенда */
+.legend {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.dot.available {
+    background: #4adb4f;
+    border: 2px solid #042306;
+}
+
+.dot.booked {
+    background: #f69ea7;
+    border: 2px solid #210808;
+}
+
+.dot.in-cart {
+    background: var(--tg-button);
+    border: 2px solid var(--tg-button-text);
+}
+
+/* Тёмная тема для легенды */
+@media (prefers-color-scheme: dark) {
+    .dot.available {
+        background: #2e7d32;
+        border: 2px solid #4caf50;
+    }
+
+    .dot.booked {
+        background: #c62828;
+        border: 2px solid #ef5350;
+    }
+}
+
+/* Адаптивность для маленьких экранов */
+@media (max-width: 380px) {
+    .schedule-table {
+        font-size: 10px;
+    }
+
+    .schedule-table th,
+    .schedule-table td {
+        padding: 6px 2px;
+        min-width: 50px;
+    }
+
+    .slot-cell {
+        height: 40px;
+    }
+}

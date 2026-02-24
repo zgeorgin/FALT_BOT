@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FALT Laundry</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --tg-bg: var(--tg-theme-bg-color, #ffffff);
+            --tg-text: var(--tg-theme-text-color, #000000);
+            --tg-hint: var(--tg-theme-hint-color, #999999);
+            --tg-button: var(--tg-theme-button-color, #2481cc);
+            --tg-button-text: var(--tg-theme-button-text-color, #ffffff);
+            --tg-secondary-bg: var(--tg-theme-secondary-bg-color, #f5f5f5);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background: var(--tg-bg);
+            color: var(--tg-text);
+            padding-bottom: 100px;
+        }
+        
+        /* Навигация - большие кнопки */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            background: var(--tg-bg);
+            border-top: 1px solid #e0e0e0;
+            padding: 8px;
+            z-index: 1000;
+            gap: 8px;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            padding: 14px 4px;
+            border: none;
+            border-radius: 12px;
+            background: var(--tg-secondary-bg);
+            color: var(--tg-text);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .nav-btn.active {
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+        }
+        
+        /* Страницы */
+        .page {
+            padding: 16px;
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Заголовок */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h2 {
+            font-size: 24px;
+        }
+        
+        .balance-badge {
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        /* Шаги */
+        .step-indicator {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .step-dot {
+            flex: 1;
+            height: 4px;
+            background: var(--tg-secondary-bg);
+            border-radius: 2px;
+        }
+        
+        .step-dot.active {
+            background: var(--tg-button);
+        }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        /* Карточки машинок */
+        .machines-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .machine-card {
+            padding: 24px 16px;
+            background: var(--tg-secondary-bg);
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .machine-card.selected {
+            border-color: var(--tg-button);
+            background: rgba(36, 129, 204, 0.1);
+        }
+        
+        .machine-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+        
+        .machine-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .machine-price {
+            font-size: 14px;
+            color: var(--tg-hint);
+        }
+        
+        /* Сетка времени */
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .time-slot {
+            padding: 16px 8px;
+            background: var(--tg-secondary-bg);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .time-slot.available {
+            background: #e8f5e9;
+        }
+        
+        .time-slot.booked {
+            background: #ffebee;
+            color: var(--tg-hint);
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+        
+        .time-slot.selected {
+            border-color: var(--tg-button);
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+        }
+        
+        /* Кнопки действий */
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+        
+        .btn-secondary {
+            width: 100%;
+            padding: 18px;
+            background: var(--tg-secondary-bg);
+            color: var(--tg-text);
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        
+        /* Подтверждение */
+        .confirm-box {
+            background: var(--tg-secondary-bg);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .confirm-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 16px;
+        }
+        
+        .confirm-item:last-child {
+            border-bottom: none;
+        }
+        
+        .confirm-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 16px;
+            margin-top: 16px;
+            border-top: 2px solid var(--tg-bg);
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        /* Заглушки */
+        .placeholder {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .placeholder-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .placeholder h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        
+        .placeholder p {
+            color: var(--tg-hint);
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+        
+        /* Мои записи */
+        .booking-card {
+            background: var(--tg-secondary-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .booking-date {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .booking-status {
+            color: #31d158;
+            font-weight: 600;
+        }
+        
+        .booking-info {
+            color: var(--tg-hint);
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+        
+        .btn-cancel {
+            width: 100%;
+            padding: 14px;
+            background: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Логин */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            padding: 24px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo-icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .input-group {
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            font-size: 18px;
+        }
+        
+        .hint {
+            text-align: center;
+            color: var(--tg-hint);
+            margin-top: 16px;
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--tg-text);
+            color: var(--tg-bg);
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 2000;
+            display: none;
+        }
+        
+        .toast.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="nav-bar">
+        <button class="nav-btn active" onclick="showPage('home-step1')">
+            <span class="nav-icon">🧺</span>
+            <span>Стиралка</span>
+        </button>
+        <button class="nav-btn" onclick="showPage('bookings')">
+            <span class="nav-icon">📋</span>
+            <span>Записи</span>
+        </button>
+        <button class="nav-btn" onclick="showPage('studyroom')">
+            <span class="nav-icon">📚</span>
+            <span>Боталка</span>
+        </button>
+        <button class="nav-btn" onclick="showPage('profile')">
+            <span class="nav-icon">👤</span>
+            <span>Профиль</span>
+        </button>
+    </nav>
+
+    <!-- Логин -->
+    <div id="login" class="page active">
+        <div class="login-container">
+            <div class="logo">
+                <div class="logo-icon">🧺</div>
+                <h1>FALT Laundry</h1>
+                <p>Бронирование стиральных машин</p>
+            </div>
+            <div id="login-form">
+                <div class="input-group">
+                    <input type="email" id="email-input" placeholder="your@email.ru">
+                </div>
+                <button class="btn-primary" onclick="handleLogin()">Войти</button>
+                <p class="hint">Введите email из бота</p>
+            </div>
+            <div id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Вход...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Главная - Шаг 1: Выбор машинки -->
+    <div id="home-step1" class="page">
+        <div class="header">
+            <h2>Выберите машинку</h2>
+            <div class="balance-badge"><span id="balance">0</span> ₽</div>
+        </div>
+        <div class="step-indicator">
+            <div class="step-dot active"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+        </div>
+        <div class="machines-grid" id="machines-list"></div>
+    </div>
+
+    <!-- Главная - Шаг 2: Выбор времени -->
+    <div id="home-step2" class="page">
+        <div class="header">
+            <h2>Выберите время</h2>
+            <div class="balance-badge"><span id="balance2">0</span> ₽</div>
+        </div>
+        <div class="step-indicator">
+            <div class="step-dot active"></div>
+            <div class="step-dot active"></div>
+            <div class="step-dot"></div>
+        </div>
+        <div class="step-title" id="selected-machine-name"></div>
+        <div class="time-grid" id="time-slots"></div>
+        <button class="btn-secondary" onclick="backToMachines()">← Назад</button>
+    </div>
+
+    <!-- Главная - Шаг 3: Подтверждение -->
+    <div id="home-step3" class="page">
+        <div class="header">
+            <h2>Подтверждение</h2>
+            <div class="balance-badge"><span id="balance3">0</span> ₽</div>
+        </div>
+        <div class="step-indicator">
+            <div class="step-dot active"></div>
+            <div class="step-dot active"></div>
+            <div class="step-dot active"></div>
+        </div>
+        <div class="confirm-box">
+            <div class="confirm-item">
+                <span>Машинка</span>
+                <span id="confirm-machine"></span>
+            </div>
+            <div class="confirm-item">
+                <span>Дата</span>
+                <span id="confirm-date"></span>
+            </div>
+            <div class="confirm-item">
+                <span>Время</span>
+                <span id="confirm-time"></span>
+            </div>
+            <div class="confirm-item">
+                <span>Длительность</span>
+                <span>1 час</span>
+            </div>
+            <div class="confirm-total">
+                <span>Итого</span>
+                <span id="confirm-price">50 ₽</span>
+            </div>
+        </div>
+        <button class="btn-primary" onclick="confirmBooking()">Оплатить и забронировать</button>
+        <button class="btn-secondary" onclick="backToTime()">← Назад</button>
+    </div>
+
+    <!-- Мои записи -->
+    <div id="bookings" class="page">
+        <h2 style="margin-bottom: 20px;">Мои записи</h2>
+        <div id="bookings-list"></div>
+        <div id="no-bookings" class="placeholder" style="display: none;">
+            <div class="placeholder-icon">📋</div>
+            <h3>Нет записей</h3>
+            <p>Забронируйте стиральную машину</p>
+            <button class="btn-primary" onclick="showPage('home')">Записаться</button>
+        </div>
+    </div>
+
+        <!-- Боталка - заглушка -->
+    <div id="studyroom" class="page">
+        <div class="placeholder">
+            <div class="placeholder-icon">📚</div>
+            <h3>Бронирование боталки</h3>
+            <p>Пока недоступно</p>
+            <button class="btn-primary" onclick="showPage('home-step1')">На главную</button>
+        </div>
+    </div>
+
+        <!-- Профиль -->
+    <div id="profile" class="page">
+        <h2 style="margin-bottom: 20px;">Профиль</h2>
+        <div class="confirm-box">
+            <div class="confirm-item">
+                <span>Имя</span>
+                <span id="profile-name">-</span>
+            </div>
+            <div class="confirm-item">
+                <span>Email</span>
+                <span id="profile-email">-</span>
+            </div>
+        </div>
+        
+        <div class="confirm-box" style="margin-top: 16px;">
+            <div class="confirm-total" style="border: none; margin: 0; padding: 0;">
+                <span>Баланс</span>
+                <span id="profile-balance">0 ₽</span>
+            </div>
+        </div>
+        
+        <button class="btn-primary" onclick="showTopupPlaceholder()">💰 Пополнить кошелек</button>
+        <button class="btn-secondary" onclick="logout()">🚪 Выйти</button>
+    </div>
+
+        <!-- Заглушка пополнения -->
+    <div id="topup-placeholder" class="page">
+        <div class="placeholder">
+            <div class="placeholder-icon">💳</div>
+            <h3>Пополнение кошелька</h3>
+            <p>Пока недоступно в Mini App.<br>Используйте бота для пополнения</p>
+            <button class="btn-primary" onclick="showPage('profile')">← Назад</button>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

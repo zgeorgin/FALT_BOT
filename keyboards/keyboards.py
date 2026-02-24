@@ -29,17 +29,13 @@ def get_cancel_kb() -> InlineKeyboardMarkup:
 
 def get_accept_registration_admin_kb(user_id, name, surname) -> InlineKeyboardMarkup:
     inline_kb_list = [
-        [InlineKeyboardButton(text="Подтвердить", callback_data=f"{user_id} {name} {surname} registration_admin_accept")],
-        [InlineKeyboardButton(text="Отклонить", callback_data=f"{user_id} {name} {surname} registration_admin_decline")]
+        [InlineKeyboardButton(text="Подтвердить", callback_data=f"{user_id} registration_admin_accept")],
+        [InlineKeyboardButton(text="Отклонить", callback_data=f"{user_id} registration_admin_decline")]
     ]
-    
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
-
-
-def get_accept_studyroom_record_admin_kb(user_id) -> InlineKeyboardMarkup:
+def get_accept_studyroom_record_admin_kb(user_id, date, time_slot) -> InlineKeyboardMarkup:
     inline_kb_list = [
-        [InlineKeyboardButton(text="Подтвердить", callback_data=f"{user_id} studyroom_record_admin_accept")],
-        [InlineKeyboardButton(text="Отклонить", callback_data=f"{user_id} studyroom_record_admin_decline")]
+        [InlineKeyboardButton(text="Подтвердить", callback_data=f"{user_id} {date} {time_slot} studyroom_accept")],
+        [InlineKeyboardButton(text="Отклонить", callback_data=f"{user_id} {date} {time_slot} studyroom_decline")]
     ]
-
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
