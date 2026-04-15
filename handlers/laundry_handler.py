@@ -16,6 +16,7 @@ from config import (
     LAUNDRY_PRICE_PER_HOUR_RUB,
     LAUNDRY_PRICE_PER_HOUR_WASH_RUB,
     LAUNDRY_PRICE_PER_HOUR_DRY_RUB,
+    LAUNDRY_CANCEL_DEADLINE_MINUTES,
 )
 from database.db import is_registered
 from keyboards.keyboards import get_cancel_kb, get_start_kb
@@ -47,6 +48,15 @@ def _parse_hourly_rate(default_value: str | None) -> int:
         return int(round(float(default_value)))
     except (TypeError, ValueError):
         return 75
+
+
+def _parse_cancel_deadline_minutes(default_value: str | None) -> int:
+    try:
+        if default_value is None:
+            return 15
+        return max(0, int(default_value))
+    except (TypeError, ValueError):
+        return 15
 
 
 def _rate_for_machine(machine_id: str) -> int:
@@ -82,6 +92,9 @@ def _calc_total_amount(records: list[tuple[str, str, str]]) -> tuple[int, float]
         total_hours += hours
         total_amount += _amount_for_record(machine_id, begin_time, end_time)
     return int(total_amount), total_hours
+
+
+CANCEL_DEADLINE_MINUTES = _parse_cancel_deadline_minutes(LAUNDRY_CANCEL_DEADLINE_MINUTES)
 
 @laundry_router.callback_query(lambda callback : callback.data in ["laundry_record","exit_from_record"])
 async def start_record(call : CallbackQuery, state : FSMContext):
@@ -162,8 +175,21 @@ async def laundry_cancel(call: CallbackQuery):
     _, date, machine, b, e = call.data.split()
     schedule = Schedule(SCHEDULE_PATH)
     schedule.load_schedule()
-    ok = schedule.remove_booking(date, machine, b, e, str(call.message.chat.id))
-    if not ok:
+    cancel_status = schedule.remove_booking(
+        date,
+        machine,
+        b,
+        e,
+        str(call.message.chat.id),
+        cancel_deadline_minutes=CANCEL_DEADLINE_MINUTES,
+    )
+    if cancel_status == "too_late":
+        await call.message.edit_caption(
+            caption=f"Отмена недоступна: запись можно отменить не позже, чем за {CANCEL_DEADLINE_MINUTES} мин. до начала.",
+            reply_markup=get_start_kb(),
+        )
+        return
+    if cancel_status != "removed":
         await call.message.edit_caption(caption="Не удалось отменить запись (возможно, она уже удалена).", reply_markup=get_start_kb())
         return
     try:
