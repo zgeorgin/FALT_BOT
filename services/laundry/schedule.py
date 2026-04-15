@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class Schedule():
     def __init__(self, filepath):
@@ -57,10 +57,26 @@ class Schedule():
                         res.append((date, machine_id, begin_time, end_time, username))
         return sorted(res, key=lambda x: (x[0], x[1], x[2]))
 
-    def remove_booking(self, date, machine_id, start_time, end_time, user_id):
+    @staticmethod
+    def _parse_booking_start(date, start_time):
+        day, month, year = map(int, date.split("."))
+        hour, minute = map(int, start_time.split(":"))
+        return datetime(year, month, day, hour, minute)
+
+    def can_cancel_booking(self, date, start_time, cancel_deadline_minutes=0):
+        try:
+            begin_at = self._parse_booking_start(date, start_time)
+            lock_minutes = max(0, int(cancel_deadline_minutes))
+        except (ValueError, TypeError):
+            return False
+
+        cancel_deadline = begin_at - timedelta(minutes=lock_minutes)
+        return datetime.now() < cancel_deadline
+
+    def remove_booking(self, date, machine_id, start_time, end_time, user_id, cancel_deadline_minutes=0):
         uid = str(user_id)
         if date not in self.schedule or machine_id not in self.schedule[date]:
-            return False
+            return "not_found"
         items = self.schedule[date][machine_id]
         new_items = []
         removed = False
@@ -68,11 +84,14 @@ class Schedule():
             bs, be = booking[0], booking[1]
             owner_ok = len(booking) >= 4 and str(booking[3]) == uid
             if bs == start_time and be == end_time and owner_ok and not removed:
+                if not self.can_cancel_booking(date, start_time, cancel_deadline_minutes):
+                    return "too_late"
                 removed = True
                 continue
             new_items.append(booking)
         if removed:
             self.schedule[date][machine_id] = new_items
             self.save_schedule()
-        return removed
+            return "removed"
+        return "not_found"
     
