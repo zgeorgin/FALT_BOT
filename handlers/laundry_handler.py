@@ -269,7 +269,7 @@ async def laundry_pay(call : CallbackQuery, state : FSMContext):
     user = is_registered(call.message.chat.id)
     label = f"{user.surname} {user.name[0]}." if user else "Пользователь"
     for machine_id, begin_time, end_time in records:
-        event_time = event_time = datetime.strptime(
+        event_time = datetime.strptime(
             f"{begin_time} {data["date"]}",
             "%H:%M %d.%m.%Y"
         )
