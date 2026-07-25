@@ -12,12 +12,33 @@ from sources.generate_file import generate_file
 admin_router = Router()
 
 
+def get_registration_user_data(call: CallbackQuery) -> tuple[int, str, str]:
+    data = call.data.split()
+    user_id = int(data[0])
+
+    # Поддержка кнопок, отправленных до перехода на короткий callback_data.
+    if len(data) > 2:
+        name = " ".join(data[1:-2])
+        surname = data[-2]
+        return user_id, name, surname
+
+    caption = call.message.caption or ""
+    prefix = "Пользователь: "
+    if not caption.startswith(prefix):
+        raise ValueError("В подписи заявки отсутствуют данные пользователя")
+
+    full_name = caption[len(prefix):].strip()
+    try:
+        name, surname = full_name.rsplit(maxsplit=1)
+    except ValueError as error:
+        raise ValueError("В подписи заявки некорректно указаны имя и фамилия") from error
+
+    return user_id, name, surname
+
+
 @admin_router.callback_query(F.data.contains("registration_admin_accept"))
 async def accepting_registration(call : CallbackQuery):
-    data = call.data.split()
-    user_id = data[0]
-    name = " ".join(data[1:-2])
-    surname = data[-2]
+    user_id, name, surname = get_registration_user_data(call)
     user = User(user_id, name, surname)
     add_user(user)
     await call.bot.edit_message_caption(message_id=call.message.message_id, chat_id=call.message.chat.id, caption="Заявка одобрена", reply_markup=None)
@@ -26,16 +47,9 @@ async def accepting_registration(call : CallbackQuery):
 
 @admin_router.callback_query(F.data.contains("registration_admin_decline"))
 async def declining_registration(call : CallbackQuery):
-    data = call.data.split()
-    try:
-        user_id, name, surname = data[:-1]
-        user_id = int(user_id)
-        await call.bot.edit_message_caption(message_id=call.message.message_id, chat_id=call.message.chat.id, caption="Заявка отклонена", reply_markup=None)
-        await call.bot.send_message(user_id, "Ваша заявка на регистрацию отклонена!", reply_markup=get_start_kb())
-    except:
-        user_id = int(data[0])
-        await call.bot.edit_message_caption(message_id=call.message.message_id, chat_id=call.message.chat.id, caption="Заявка отклонена", reply_markup=None)
-        await call.bot.send_message(user_id, "Неправильный формат!!!", reply_markup=get_start_kb())
+    user_id = int(call.data.split()[0])
+    await call.bot.edit_message_caption(message_id=call.message.message_id, chat_id=call.message.chat.id, caption="Заявка отклонена", reply_markup=None)
+    await call.bot.send_message(user_id, "Ваша заявка на регистрацию отклонена!", reply_markup=get_start_kb())
     set_registration_click_status(user_id)
 
 
