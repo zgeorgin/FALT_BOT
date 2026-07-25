@@ -56,6 +56,8 @@ async def send_info(message : Message, state : FSMContext):
         return
     data = await state.update_data(surname=message.text)
     await send_to_admin(message, data)
+    await state.clear()
+    await message.answer("Ваша заявка отправлена и ожидает рассмотрения администратора")
     
 async def send_to_admin(message: Message, data: dict):
     path = data["photo"]
@@ -63,7 +65,7 @@ async def send_to_admin(message: Message, data: dict):
         ADMIN_CHAT_ID,
         FSInputFile(path),
         caption=f'Пользователь: {data["name"]} {data["surname"]}',
-        reply_markup=get_accept_registration_admin_kb(message.chat.id, data["name"], data["surname"])
+        reply_markup=get_accept_registration_admin_kb(message.chat.id)
     )
     add_registration_click(message.from_user.id)
     try:
