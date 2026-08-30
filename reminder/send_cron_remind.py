@@ -2,19 +2,22 @@ import sys
 import asyncio
 from aiogram import Bot
 from crontab import CronTab
+from filelock import FileLock
 
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))
 
 from config import TOKEN
+from reminder.reminder_tools import CRON_LOCK_PATH
 
 
 async def send(chat_id: int, message: str, comment: str):
-    # удаляем напоминалку
-    cron = CronTab(user=True)
-    cron.remove_all(comment=comment)
-    cron.write()
+    # удаляем напоминалку безопасно
+    with FileLock(CRON_LOCK_PATH):
+        cron = CronTab(user=True)
+        cron.remove_all(comment=comment)
+        cron.write()
 
     bot = Bot(token=TOKEN)
     await bot.send_message(

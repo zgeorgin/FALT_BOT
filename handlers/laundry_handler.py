@@ -29,7 +29,7 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
-from reminder.reminder_tools import add_reminders
+from reminder.reminder_tools import add_reminders, remove_reminders
 
 laundry_router = Router()
 
@@ -171,6 +171,8 @@ async def laundry_cancel(call: CallbackQuery):
     if not ok:
         await call.message.edit_caption(caption="Не удалось отменить запись (возможно, она уже удалена).", reply_markup=get_start_kb())
         return
+    event_time = datetime.strptime(f"{b} {date}", "%H:%M %d.%m.%Y")
+    remove_reminders(call.message.chat.id, event_time, machine)
     try:
         refund_amount = _amount_for_record(machine, b, e)
     except ValueError:
